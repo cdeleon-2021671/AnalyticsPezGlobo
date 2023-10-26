@@ -86,3 +86,47 @@ exports.verifyEvent = async (req, res) => {
     return res.status(500).send({ message: "Error verifying click" });
   }
 };
+
+exports.getLatestEvents = async (req, res) => {
+  try {
+    // Traer todas las vistas PAGE VIEW
+    const events = await Event.find({ event: "Page View" });
+    // Ordenar por fecha de mas reciente a mas antigua
+    events.sort((a, b) => {
+      return b.time - a.time;
+    });
+    // Filtrar las vistas de las ultimas 48 horas
+    const date = new Date();
+    date.setHours(date.getHours() - 6);
+    const dateNow = date.toISOString();
+    const latestEvents = events.filter((item) => {
+      const time = Date.parse(item.time);
+      const actual = Date.parse(dateNow);
+      const flag = actual - time;
+      if (flag < 172800000) return item;
+    });
+    // Verificar que no se repita la fecha con el usuario y la url visitada
+    const result = [];
+    for (const element of latestEvents) {
+      let flag = false;
+      for (const item of result) {
+        const { sourceUrl, fingerprint, time } = item;
+        const url = element.sourceUrl == sourceUrl;
+        const user = element.fingerprint == fingerprint;
+        const last = new Date(time).toLocaleDateString();
+        const actual = new Date(element.time).toLocaleDateString();
+        const date = last == actual;
+        if (url && user && date) {
+          flag = true;
+          break;
+        }
+      }
+      if (flag) continue;
+      result.push(element.data);
+    }
+    return res.send({ result });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).send({ message: "Error getting events" });
+  }
+};
