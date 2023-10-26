@@ -106,10 +106,10 @@ exports.getLatestEvents = async (req, res) => {
       if (flag < 172800000) return item;
     });
     // Verificar que no se repita la fecha con el usuario y la url visitada
-    const result = [];
+    const trending = [];
     for (const element of latestEvents) {
       let flag = false;
-      for (const item of result) {
+      for (const item of trending) {
         const { sourceUrl, fingerprint, time } = item;
         const url = element.sourceUrl == sourceUrl;
         const user = element.fingerprint == fingerprint;
@@ -122,8 +122,37 @@ exports.getLatestEvents = async (req, res) => {
         }
       }
       if (flag) continue;
-      result.push(element.data);
+      trending.push(element);
     }
+    // contar cuantas veces se repiten los productos y ordenarlos segun el conteo
+    const result = [];
+    for (const element of trending) {
+      const { entityId } = element.data;
+      const { objectId } = element.data;
+      const sku = objectId.split("-")[1];
+      // Verificar si el id ya fue contado
+      let flag = false;
+      for (const item of result) {
+        if (item.idProduct != sku) continue;
+        flag = true;
+        break;
+      }
+      if (flag) continue;
+      // Contar los que se repiten adelante
+      let repeat = 0;
+      for (const item of trending) {
+        if (element.data.objectId == item.data.objectId) repeat++;
+      }
+      const product = {
+        storeId: entityId,
+        idProduct: sku,
+        views: repeat,
+      };
+      result.push(product);
+    }
+    result.sort((a, b)=>{
+      return b.views - a.views
+    })
     return res.send({ result });
   } catch (err) {
     console.log(err);
