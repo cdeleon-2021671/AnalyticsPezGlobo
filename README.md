@@ -1,6 +1,6 @@
 # AnalyticsPezGlobo
 
-Proyecto orientado a llevar las estadísticas de los productos vistos, links visitados y busquedas realizadas por los usuarios en <a href="https://tienda.gt">Tienda.gt</a>
+Proyecto orientado a llevar las estadísticas de los productos vistos, links visitados y busquedas realizadas por los usuarios en <a href="https://tienda.gt" target="_blank">Tienda.gt</a>
 
 ## Dependencias
 
