@@ -43,7 +43,7 @@ app.use(helmet());
 app.use(morgan("dev"));
 
 // Establecer las rutas raices y subrutas a utilizar
-app.use("/event", eventRoutes);
+app.use("/newEvent", eventRoutes);
 app.use("/search", searchRoutes);
 
 // Funcion para iniciar el servidor en puerto designado
