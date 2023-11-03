@@ -33,6 +33,8 @@ const corsOptions = {
       callback(new Error("Dominio no permitido por CORS"));
     }
   },
+  exposeHeaders: ['Referer'],
+  credentials: true
 };
 
 // Utilizar cors en el servidor con la configuracion para tienda.gt
