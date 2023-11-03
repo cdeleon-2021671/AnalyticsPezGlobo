@@ -28,9 +28,9 @@ const allowedOrigins = ["https://tienda.gt", "https://www.tienda.gt"];
 const corsOptions = {
   origin: (origin, callback) => {
     if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
-      callback(null, true);
+      callback(null, true, { credentials: true });
     } else {
-      callback(new Error("Dominio no permitido por CORS", origin));
+      callback(new Error("Dominio no permitido por CORS"));
     }
   },
 };
