@@ -30,7 +30,7 @@ const corsOptions = {
     if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
       callback(null, true, { credentials: true });
     } else {
-      callback(new Error("Dominio no permitido por CORS"));
+      callback(new Error(`Dominio no permitido por CORS ${origin}`));
     }
   },
 };
