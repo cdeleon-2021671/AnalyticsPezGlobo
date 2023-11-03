@@ -23,14 +23,20 @@ app.use(express.urlencoded({ extended: false }));
 // Convertir peticiones en objetos json
 app.use(express.json());
 
+// validar que solo tienda.gt pueda acceder
+const allowedOrigins = ["https://tienda.gt", "https://www.tienda.gt"];
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error("Dominio no permitido por CORS"));
+    }
+  },
+};
+
 // Utilizar cors en el servidor con la configuracion para tienda.gt
-app.use(
-  cors({
-    origin: ["https://tienda.gt", "https://www.tienda.gt"],
-    exposeHeaders: ['Referer'],
-    credentials: true
-  })
-);
+app.use(cors(corsOptions));
 // Utilizar helmet en el servidor
 app.use(helmet());
 // Utilizar morgan como desarrolador en el servidor
