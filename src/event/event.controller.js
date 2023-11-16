@@ -202,6 +202,8 @@ exports.getLatestEvents = async (req, res) => {
       for (const item of result) {
         // si el sku y el idProduct de item son diferentes entonces continua y salta al siguente elemento
         if (item.idProduct != sku) continue;
+        // si es la misma tienda continua
+        if(item.storeId != entityId) continue;
         // cambia flag a true y termina el bucle
         flag = true;
         break;
